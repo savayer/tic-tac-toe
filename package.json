@@ -1,0 +1,22 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp prod --production",
+    "dev": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "webpack": "^4.33.0",
+    "webpack-dev-server": "^3.7.1",
+    "webpack-stream": "^5.2.1",
+    "yargs": "^14.0.0"
+  },
+  "dependencies": {}
+}
