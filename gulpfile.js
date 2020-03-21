@@ -15,6 +15,12 @@ gulp.task('clean', () => {
     return del('./dist/*');
 })
 
+gulp.task('img', () => {
+    return gulp.src('./src/img/*')
+        .pipe(gulp.dest('./dist/img'))
+        .on("end", browserSync.reload);
+})
+
 gulp.task('html', () => {
     return gulp.src('./src/*.html')
         .pipe(gulp.dest('./dist'))
@@ -46,6 +52,6 @@ gulp.task('prod', gulp.series(
 
 gulp.task('default', gulp.series(
     'clean', 
-    gulp.parallel(['html', 'scripts'],
+    gulp.parallel(['html', 'scripts', 'img'],
     gulp.parallel('serve'))
 ))
