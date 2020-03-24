@@ -10,9 +10,44 @@ export default {
                 return;
             }
             el.classList.add('tic')
-            this.syncMatrix(+el.dataset.x, +el.dataset.y)
+            this.syncMatrix(+el.dataset.y, +el.dataset.x)
             this.checkWin()
+            /* setTimeout(() => {
+                this.computerClick()
+            }, 300) */
         })
+    },
+    computerClick() {
+        if (!this.game) return;
+        const matrix = this.matrix
+        const length = this.userCoordinates.length-1
+        const coords = this.userCoordinates[length]
+        const x = coords.x, y = coords.y
+
+        /* if (matrix[x][y+1] === 0) {
+            document.querySelector(`td[data-x="${x}"][data-y="${y+1}"]`).classList.add('tac')
+            this.syncMatrix(x, y+1, false)
+        } else if (matrix[x][y-1] === 0) {
+            document.querySelector(`td[data-x="${x}"][data-y="${y-1}"]`).classList.add('tac')
+            this.syncMatrix(x, y-1, false)
+        } else if (matrix[x+1][y] === 0) {
+            document.querySelector(`td[data-x="${x+1}"][data-y="${y}"]`).classList.add('tac')
+            this.syncMatrix(x+1, y, false)
+        } else if (matrix[x-1][y] === 0) {
+            document.querySelector(`td[data-x="${x-1}"][data-y="${y}"]`).classList.add('tac')
+            this.syncMatrix(x-1, y, false)
+        } else if (matrix[x-1][y-1] === 0) {
+            document.querySelector(`td[data-x="${x-1}"][data-y="${y-1}"]`).classList.add('tac')
+            this.syncMatrix(x-1, y-1, false)
+        } else if (matrix[x+1][y-1] === 0) {
+            document.querySelector(`td[data-x="${x+1}"][data-y="${y-1}"]`).classList.add('tac')
+            this.syncMatrix(x+1, y-1, false)
+        } else if (matrix[x+1][y+1] === 0) {
+            document.querySelector(`td[data-x="${x+1}"][data-y="${y+1}"]`).classList.add('tac')
+            this.syncMatrix(x+1, y+1, false)
+        } */
+
+        this.checkWin()
     },
     init() {
         this.game = true        
@@ -65,7 +100,7 @@ export default {
                 return 'user'
             }
         }
-
+        
         for (let coord of this.compCoordinates) {
             for (let count = coord.y; count < coord.y+5; count++) {
                 if (matrix[coord.x][count] === 'C') {
@@ -84,6 +119,7 @@ export default {
         const matrix = this.matrix
         let countUser = 0
         let countComp = 0
+        console.log(this.matrix)
         
         for (let coord of this.userCoordinates) {
             for (let count = coord.x; count < coord.x+5; count++) {
