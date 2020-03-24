@@ -3,7 +3,7 @@ import Cell from './Cell'
 class Table {
     constructor(table) {
         this.table = table
-        Cell.createMatrix()
+        Cell.init()
     }
 
     createTable() {
@@ -13,9 +13,9 @@ class Table {
         let tr, td;
 
         table.classList.add("battle-area");
-        for (let x = 0; x < 20; x++) {
+        for (let y = 0; y < 20; y++) {
             tr = document.createElement("tr");
-            for (let y = 0; y < 20; y++) {
+            for (let x = 0; x < 20; x++) {
                 td = document.createElement("td");
                 td.dataset.x = x
                 td.dataset.y = y
