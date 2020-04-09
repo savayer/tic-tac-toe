@@ -10,7 +10,7 @@ export default {
                 return;
             }
             el.classList.add('tic')
-            this.syncMatrix(+el.dataset.y, +el.dataset.x)
+            this.syncMatrix(+el.dataset.x, +el.dataset.y)
             this.checkWin()
             /* setTimeout(() => {
                 this.computerClick()
@@ -53,9 +53,7 @@ export default {
         this.game = true        
         this.userCoordinates = []
         this.compCoordinates = []
-        this.createMatrix()
-    },
-    createMatrix() {
+        
         this.matrix = []
         for (let i = 0; i < 20; i++) {
             this.matrix.push(Array(20).fill(0))
@@ -78,7 +76,8 @@ export default {
             vertical === 'user' ? this.endGane('You win') : this.endGane('Computer wins');            
         } else if (horizontal) {
             horizontal === 'user' ? this.endGane('You win') : this.endGane('Computer wins');
-        } else if (diagonal) {
+        } 
+        else if (diagonal) {
             diagonal === 'user' ? this.endGane('You win') : this.endGane('Computer wins');
         }
     },
@@ -88,12 +87,23 @@ export default {
         let countComp = 0
         
         for (let coord of this.userCoordinates) {
-            for (let count = coord.y; count < coord.y+5; count++) {
-                if (matrix[coord.x][count] === 'U') {
-                    countUser++
-                } else {
-                    countUser = 0;
-                    break;
+            if (coord.y + 5 <= 20) {
+                for (let count = coord.y; count < coord.y+5; count++) {
+                    if (matrix[coord.x][count] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
+                }
+            } else {
+                for (let count = coord.y; count < coord.y-5; count--) {
+                    if (matrix[coord.x][count] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
                 }
             }
             if (countUser === 5) {
@@ -102,12 +112,23 @@ export default {
         }
         
         for (let coord of this.compCoordinates) {
-            for (let count = coord.y; count < coord.y+5; count++) {
-                if (matrix[coord.x][count] === 'C') {
-                    countComp++
-                } else {
-                    countComp = 0;
-                    break;
+            if (coord.y + 5 <= 20) {
+                for (let count = coord.y; count < coord.y+5; count++) {
+                    if (matrix[coord.x][count] === 'C') {
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
+                }
+            } else {
+                for (let count = coord.y; count < coord.y-5; count--) {
+                    if (matrix[coord.x][count] === 'C') {
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
                 }
             }
             if (countComp === 5) {
@@ -119,31 +140,54 @@ export default {
         const matrix = this.matrix
         let countUser = 0
         let countComp = 0
-        console.log(this.matrix)
+        console.log(this.userCoordinates)
         
         for (let coord of this.userCoordinates) {
-            for (let count = coord.x; count < coord.x+5; count++) {
-                if (matrix[count][coord.y] === 'U') {
-                    countUser++
-                } else {
-                    countUser = 0;
-                    break;
+            if (coord.x + 5 <= 20) {
+                for (let count = coord.x; count < coord.x+5; count++) {
+                    if (matrix[count][coord.y] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
+                }
+            } else {
+                for (let count = coord.x; count < coord.x-5; count--) {
+                    if (matrix[count][coord.y] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
                 }
             }
+            
             if (countUser === 5) {
                 return 'user'
             }
         }
 
         for (let coord of this.compCoordinates) {
-            for (let count = coord.x; count < coord.x+5; count++) {
-                if (matrix[count][coord.y] === 'C') {
-                    countComp++
-                } else {
-                    countComp = 0;
-                    break;
+            if (coord.x + 5 <= 20) {
+                for (let count = coord.x; count < coord.x+5; count++) {
+                    if (matrix[count][coord.y] === 'C') {
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
                 }
-            }
+            } else {
+                for (let count = coord.x; count < coord.x-5; count--) {
+                    if (matrix[count][coord.y] === 'C') {
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
+                }
+            }            
             if (countComp === 5) {
                 return 'computer'
             }
@@ -155,28 +199,50 @@ export default {
         let countComp = 0
         
         for (let coord of this.userCoordinates) {
-            for (let count = coord.x; count < coord.x+5; count++) {
-                if (matrix[count][coord.y+countUser] === 'U') {
-                    countUser++
-                } else {
-                    countUser = 0;
-                    break;
+            if (coord.x + 5 <= 20) {
+                for (let count = coord.x; count < coord.x+5; count++) {
+                    if (matrix[count][coord.y+countUser] === 'U' || matrix[count][coord.y-countUser] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
                 }
-            }
+            } else {
+                for (let count = coord.x; count < coord.x-5; count--) {
+                    if (matrix[count][coord.y+countUser] === 'U' || matrix[count][coord.y-countUser] === 'U') {
+                        countUser++
+                    } else {
+                        countUser = 0;
+                        break;
+                    }
+                }
+            }        
             if (countUser === 5) {
                 return 'user'
             }
         }
 
-        for (let coord of this.userCoordinates) {
-            for (let count = coord.x; count < coord.x+5; count++) {
-                if (matrix[count][coord.y+countComp] === 'C') {
-                    countComp++
-                } else {
-                    countComp = 0;
-                    break;
+        for (let coord of this.compCoordinates) {
+            if (coord.x + 5 <= 20) {
+                for (let count = coord.x; count < coord.x+5; count++) {
+                    if (matrix[count][coord.y+countUser] === 'C' || matrix[count][coord.y-countUser] === 'C') {                    
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
                 }
-            }
+            } else {
+                for (let count = coord.x; count < coord.x-5; count--) {
+                    if (matrix[count][coord.y+countUser] === 'C' || matrix[count][coord.y-countUser] === 'C') {
+                        countComp++
+                    } else {
+                        countComp = 0;
+                        break;
+                    }
+                }
+            }        
             if (countComp === 5) {
                 return 'computer'
             }
