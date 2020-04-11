@@ -36,45 +36,57 @@ server.listen(setup.port, () => {
 
 
 /**
- * socket
+ * WebSocket implementation
  */
 const wsServer = new WebSocket.Server({
     server: server
 });
 
-const clients = []
+const clientsStorage = []
 let data = {}
-const sendAll = (data, clients) => {
-    for (let client in clients) {
-        clients[client].send(JSON.stringify(data));
-    }    
+const sendInfoToANewUserAboutOldUsers = () => {
+    const client = clientsStorage[clientsStorage.length-1];
+    for (let i = 0; i < clientsStorage.length-1; i++) {
+        const clientsData = {
+            userId: clientsStorage[i].userId,
+            username: clientsStorage[i].username,
+            type: 'user',
+            amount: wsServer.clients.size
+        }
+        client.send(JSON.stringify(clientsData));
+    }
+}
+const sendAll = (data) => {
+    sendInfoToANewUserAboutOldUsers();
+    for (let client of clientsStorage) {
+        client.send(JSON.stringify(data))
+    }
 }
 
 wsServer.on('connection', (ws, req) => {
-    ws.id = req.headers['sec-websocket-key'];
-    clients.push(ws);
-    data.type = 'user';  
-    data.userId = ws.id;
-    data.username = `user-${ws.id.substr(0, 6)}`;
-    data.message = wsServer.clients.size;
-    sendAll(data, clients);
+    ws.userId = req.headers['sec-websocket-key'];
+    ws.username = `user-${ws.userId.substr(0, 6)}`;
+    clientsStorage.push(ws)
+    data = {
+        userId: ws.userId,
+        username: ws.username,
+        type: 'user',
+        amount: wsServer.clients.size
+    }
+    sendAll(data);
 
     ws.on('message', data => {
         wsServer.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
+                const parsedData = JSON.parse(data);
+                if (parsedData.type === 'edit-username') {                    
+                    const index = clientsStorage.findIndex(clientData => clientData.userId === parsedData.userId)
+                    if (index >= 0) {
+                        clientsStorage[index].username = parsedData.username
+                    }
+                }
                 client.send(data);
             }
         })
     })
-
-    ws.on('close', () => {
-        data.type = 'user';  
-        data.message = wsServer.clients.size;
-        sendAll(data, clients);
-    })
-    data = {
-        type: 'system',
-        message: 'Welcome to NodeJS Chat'
-    }
-    ws.send(JSON.stringify(data));
 })

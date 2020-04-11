@@ -7,16 +7,10 @@ if (location.protocol === 'https:') {
 
 const parseMessage = stringifiedData => {
     const data = JSON.parse(stringifiedData);
-
-    if (data.type === 'new-user') {
-        
-        return;
-    }
+    const $amountUsers = document.getElementById('amount_users');    
 
     if (data.type === 'user') {
-        const $amountUsers = document.getElementById('amount_users');
-        $amountUsers.innerText = data.message;     
-
+        $amountUsers.innerText = data.amount;
         const $players = document.querySelector('.players');
         const $li = document.createElement('li');
         const $username = document.createElement('span');
@@ -41,6 +35,13 @@ const parseMessage = stringifiedData => {
             $user.innerText = data.username
         }
     }
+
+    if (data.type === 'remove-user') {
+        const $user = document.querySelector(`span.username[data-id="${data.userId}"]`)
+        if ($user) {
+            $user.closest('li').remove()
+        }
+    }
 }
 
 //ws.onopen = () => alert('Online');
@@ -49,11 +50,11 @@ ws.onclose = event => {
     if (event.wasClean) {
         console.log('offline')
     } else {
-        console.log('disconnected')
+        console.log('disconnected', event)
     }
 }
 
-ws.onmessage = event => {    
+ws.onmessage = event => {
     parseMessage(event.data)
 };
 
