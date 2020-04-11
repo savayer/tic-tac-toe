@@ -12,73 +12,7 @@ export default {
             el.classList.add('tic')
             this.syncMatrix(+el.dataset.x, +el.dataset.y)
             this.checkWin()
-            setTimeout(() => {
-                this.computerClick()
-            }, 300)
         })
-    },
-    computerClick() {
-        if (!this.game) return;
-        const matrix = this.matrix
-        const length = this.userCoordinates.length-1
-        const coords = this.userCoordinates[length]
-        const x = coords.x, y = coords.y
-        const setZero2Table = (x, y, user = false) => {
-            document.querySelector(`td[data-x="${x}"][data-y="${y}"]`).classList.add('tac')
-            this.syncMatrix(x, y, user)
-        }
-        const has3InHorizontal = () => {
-            let countUser = 0
-            for (let coord of this.userCoordinates) {
-                if (coord.x + 3 <= 20) {
-                    for (let count = coord.x; count < coord.x+3; count++) {
-                        if (matrix[count][coord.y] === 'U') {
-                            countUser++
-                        } else {
-                            countUser = 0;
-                            break;
-                        }
-                    }
-                } else {
-                    for (let count = coord.x; count < coord.x-3; count--) {
-                        if (matrix[count][coord.y] === 'U') {
-                            countUser++
-                        } else {
-                            countUser = 0;
-                            break;
-                        }
-                    }
-                }
-                if (countUser === 3) {
-                    return {
-                        x: coord.x,
-                        y: coord.y
-                    }
-                }
-            }
-            return {}
-        }
-        const checkFour = has3InHorizontal()
-        if (checkFour.x-1 <= 20 && checkFour.x-1 >= 0) {
-            if (matrix[checkFour.x-1][checkFour.y] === 0) {
-                setZero2Table(checkFour.x-1, checkFour.y)
-            }
-        } else if (matrix[x][y+1] === 0) {
-            setZero2Table(x, y+1)
-        } else if (matrix[x][y-1] === 0) {
-            setZero2Table(x, y-1)
-        } else if (matrix[x+1][y] === 0) {
-            setZero2Table(x+1, y)            
-        } else if (matrix[x-1][y] === 0) {
-            setZero2Table(x-1, y)
-        } else if (matrix[x-1][y-1] === 0) {
-            setZero2Table(x-1, y-1)
-        } else if (matrix[x+1][y-1] === 0) {
-            setZero2Table(x+1, y-1)
-        } else if (matrix[x+1][y+1] === 0) {
-            setZero2Table(x+1, y+1)
-        }  
-        this.checkWin()
     },
     init() {
         this.game = true        

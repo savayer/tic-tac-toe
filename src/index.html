@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Tic tac toe</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         .battle-area {
             border-spacing: 0;
             width: 660px;
@@ -48,11 +51,81 @@
         td.tac {
             background: url(img/tac.png) no-repeat;            
         }
+        .players_wrapper {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 200px;
+        }
+        .players {
+            width: 100%;
+            padding-left: 20px;
+        }
+        .players li {
+            margin: 6px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .players .invite {
+            color: teal;
+            cursor: pointer;
+        }
+        .players .invite:hover {
+            text-decoration: underline;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: -1;
+            display: flex;
+            opacity: 0;
+            visibility: hidden;
+            transition: .5s;
+        }
+        .overlay.active {
+            visibility: visible;
+            opacity: 1;
+            z-index: 1;
+        }
+        .modal {
+            width: 300px;
+            margin: auto;            
+        }
+        input {
+            border: none;
+            height: 32px;
+            font-size: 18px;
+            width: 100%;
+            outline: none;
+            padding: 4px 6px;
+            position: relative;
+            z-index: 10;
+        }
+        input.error {
+            box-shadow: 0px 0px 6px red;
+        }
     </style>
 </head>
 <body>
-    <div class="text-center">
+<!--     <div class="text-center">
         <button id="start">Start game</button>
+    </div> -->
+    <div class="overlay">
+        <div class="modal">
+            <input type="text" placeholder="Your name" autofocus>
+        </div>
+    </div>
+
+    <div class="players_wrapper">
+        <div class="text-center">Users (<span id="amount_users">0</span>)</div>
+        <ol class="players"></ol>
     </div>
         
     <div id="app"></div>
