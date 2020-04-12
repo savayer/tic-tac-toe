@@ -10,6 +10,8 @@ const parseMessage = stringifiedData => {
     const $amountUsers = document.getElementById('amount_users');    
 
     if (data.type === 'user') {
+        const $user = document.querySelector(`span.username[data-id="${data.userId}"]`)
+        if ($user) return;
         $amountUsers.innerText = data.amount;
         const $players = document.querySelector('.players');
         const $li = document.createElement('li');
@@ -44,13 +46,17 @@ const parseMessage = stringifiedData => {
     }
 }
 
-//ws.onopen = () => alert('Online');
+ws.onopen = () => setStatus('Online');
+
+function setStatus(value) {
+    console.log(value)
+}
 
 ws.onclose = event => {
     if (event.wasClean) {
-        console.log('offline')
+        setStatus('offline')
     } else {
-        console.log('disconnected', event)
+        setStatus('disconnected')
     }
 }
 

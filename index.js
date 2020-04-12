@@ -8,14 +8,19 @@ $start.addEventListener("click", () => {
 }); */
 
 document.addEventListener('DOMContentLoaded', () => {
-    input((username, userId) => {        
+    const editUsername = (data) => {
         ws.send(JSON.stringify(
             {
                 type: 'edit-username',
-                userId,
-                username
+                username: data.username,
+                userId: data.userId
             }
-        ));
-    });
+        ))
+    }
+    const promise = input(editUsername);
+
+    if (promise) {
+        promise.then(editUsername)
+    }    
     init();
 })

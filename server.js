@@ -89,4 +89,12 @@ wsServer.on('connection', (ws, req) => {
             }
         })
     })
+
+    ws.on('close', () => {
+        data = {
+            type: 'remove-user',
+            amount: wsServer.clients.size
+        }
+        sendAll(data)
+    })
 })
