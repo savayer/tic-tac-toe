@@ -12,7 +12,7 @@ const config = {
     },
     resolve: {
         alias: {
-            _scripts: path.resolve(__dirname, './src/js/')
+            __js: path.resolve(__dirname, './src/js/')
         }
     }
 }
