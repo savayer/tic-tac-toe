@@ -36,7 +36,7 @@ const sendInfoToANewUserAboutOldUsers = data => {
     }
 }
 
-const sendAll = (data) => {    
+const broadcast = (data) => {
     sendInfoToANewUserAboutOldUsers(data);
     for (let client of clientsStorage) {
         client.emit(data.type, data)
@@ -44,24 +44,23 @@ const sendAll = (data) => {
 }
 
 io.on('connection', socket => {
-    socket.on('create-new-user', () => {
-        const userId = socket.id;
-        socket.username = `user-${userId.substr(0, 6)}`;
-        clientsStorage.push(socket)
-        data = {
-            type: 'add-new-user',
-            userId,
-            username: socket.username,
-            amount: io.engine.clientsCount
-        }
-        sendAll(data);
-    })
+    const userId = socket.id;
+    socket.username = `user-${userId.substr(0, 6)}`;
+    clientsStorage.push(socket)
+    
+    data = {
+        type: 'add-new-user',
+        userId,
+        username: socket.username,
+        amount: io.engine.clientsCount
+    }
+    broadcast(data);
 
     socket.on('edit-username', data => {
         const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
         if (index >= 0) {
             clientsStorage[index].username = data.username;
-            sendAll({
+            broadcast({
                 type: 'edit-username',
                 userId: clientsStorage[index].id,
                 username: data.username,
@@ -74,11 +73,11 @@ io.on('connection', socket => {
         const index = clientsStorage.findIndex(clientData => clientData.id === socket.id)
         if (index >= 0) {
             clientsStorage.splice(index, 1)
-            sendAll({
+            broadcast({
                 type: 'remove-user',
                 amount: io.engine.clientsCount,
                 userId: socket.id
-            })        
+            })
         }
     })
 });

@@ -1,11 +1,6 @@
 import init from "__js/init";
 import socket from "__js/socket";
 import input from "__js/inputName";
-/* const $start = document.getElementById("start");
-
-$start.addEventListener("click", () => {
-    
-}); */
 
 document.addEventListener('DOMContentLoaded', () => {
     const editUsername = data => {
@@ -20,4 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         promise.then(editUsername)
     }    
     init();
+
+
+    /* fetch('http://ip-api.com/json')
+    .then(res => res.json())
+    .then(json => console.log(json)); */
 })

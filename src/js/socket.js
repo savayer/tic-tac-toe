@@ -2,8 +2,6 @@ import io from 'socket.io-client'
 
 let socket = io.connect('http://localhost:9000');
 
-socket.emit('create-new-user')
-
 socket.on('add-new-user', data => {
     const $user = document.querySelector(`span.username[data-id="${data.userId}"]`)
     if ($user) {
