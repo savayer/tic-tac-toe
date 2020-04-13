@@ -12,7 +12,7 @@ class Table {
         const tbody = document.createElement("tbody");
         let tr, td;
 
-        table.classList.add("battle-area");
+        table.classList.add("battle-area", "unactive");
         for (let y = 0; y < 20; y++) {
             tr = document.createElement("tr");
             for (let x = 0; x < 20; x++) {

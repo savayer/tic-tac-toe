@@ -44,6 +44,8 @@ const sendAll = (data) => {
 }
 
 io.on('connection', socket => {
+    const clientsAmount = io.engine.clientsCount;
+    
     socket.on('create-new-user', () => {
         const userId = socket.id;
         socket.username = `user-${userId.substr(0, 6)}`;
@@ -52,7 +54,7 @@ io.on('connection', socket => {
             type: 'add-new-user',
             userId,
             username: socket.username,
-            amount: io.engine.clientsCount
+            amount: clientsAmount
         }
         sendAll(data);
     })
@@ -64,7 +66,8 @@ io.on('connection', socket => {
             sendAll({
                 type: 'edit-username',
                 userId: clientsStorage[index].id,
-                username: data.username
+                username: data.username,
+                amount: clientsAmount
             })
         }
     })
@@ -75,7 +78,7 @@ io.on('connection', socket => {
             clientsStorage.splice(index, 1)
             sendAll({
                 type: 'remove-user',
-                amount: io.engine.clientsCount,
+                amount: clientsAmount,
                 userId: socket.id
             })        
         }

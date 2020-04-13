@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+}
+#app {
+    margin: auto;
+}
+.battle-area {
+    border-spacing: 0;
+    width: 600px;
+    display: block;            
+    margin: 30px auto;
+    position: relative;
+    &.unactive {
+        opacity: .4;
+    }
+    &.unactive::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        cursor: not-allowed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+    td {
+        border: 1px solid #a4a4a4;
+        border-bottom: 0;
+        border-right: 0;
+        height: 30px;
+        width: 30px;
+        text-align: center;
+        &:last-child {
+            border-right: 1px solid #a4a4a4;
+        }
+        &:hover {
+            background-color: rgba(235, 235, 235, 0.62);
+        }
+        &.active {
+            background-color: rgba(212, 212, 212, 0.62);
+            cursor: pointer;
+        }
+        &.tic {
+            background: url(img/tic.png) no-repeat;
+        }
+        &.tac {
+            background: url(img/tac.png) no-repeat;
+        }
+    }
+    tr:last-child td {
+        border-bottom: 1px solid #a4a4a4;
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+.players_wrapper {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 200px;
+}
+
+.players {
+    width: 100%;
+    padding-left: 20px;
+    li {
+        margin: 6px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .username.bold {
+        font-weight: bold;
+    }
+    .invite {
+        color: teal;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: -1;
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transition: .5s;
+    &.active {
+        visibility: visible;
+        opacity: 1;
+        z-index: 1;
+    }
+}
+
+.modal {
+    width: 300px;
+    margin: auto;
+    input {
+        border: none;
+        height: 32px;
+        font-size: 18px;
+        width: 100%;
+        outline: none;
+        padding: 4px 6px;
+        position: relative;
+        z-index: 10;
+    }
+    input.error {
+        box-shadow: 0px 0px 6px red;
+    }
+}
