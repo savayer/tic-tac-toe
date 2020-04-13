@@ -1,4 +1,4 @@
-import ws from "./ws";
+import socket from "./socket"
 
 const inputName = (callback) => {
     const overlay = document.querySelector('.overlay')
@@ -6,7 +6,7 @@ const inputName = (callback) => {
     if (sessionStorage.getItem('username')) {
         return new Promise(resolve => {
             const interval = setInterval(() => {
-                if (ws.readyState === 1 && document.querySelector('.players li:last-child span.username')) {
+                if (socket.connected && document.querySelector('.players li:last-child span.username')) {
                     const username = sessionStorage.getItem('username');
                     const userId = document.querySelector('.players li:last-child span.username').dataset.id;
                     resolve({ userId, username });

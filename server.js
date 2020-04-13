@@ -1,100 +1,83 @@
-const setup = {
-    ssl: false,
-    port: 9000
-}
+const port = 9000;
 const express = require('express');
-const app = express();
-const fs = require('fs');
-const path = require('path');
-const WebSocket = require('ws');
-const definedServerProtocol = setup.ssl ? require('https') : require('http');
-let server;
+const app = require('express')();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
-/**
- * Server implementation
- */
-
-if (setup.ssl) {
-    const privateKey = fs.readFileSync('/etc/letsencrypt/live/tictactoe.savayer.me/privkey.pem', 'utf8');
-    const certificate = fs.readFileSync('/etc/letsencrypt/live/tictactoe.savayer.me/fullchain.pem', 'utf8');
-    const credentials = { key: privateKey, cert: certificate };
-    server = definedServerProtocol.createServer(credentials, app);
-} else {
-    server = definedServerProtocol.createServer(app);
-}
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/dist/index.html');
+});
 
 app.use('/', express.static(__dirname + '/dist'));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/dist/index.html'));
+server.listen(port, () => {
+    console.log('server started on port %s', port)
 });
-
-
-server.listen(setup.port, () => {
-    console.log("server starting on port: %s", setup.port)
-});
-
 
 /**
  * WebSocket implementation
  */
-const wsServer = new WebSocket.Server({
-    server: server
-});
+const clientsStorage = [];
+let data = [];
 
-const clientsStorage = []
-let data = {}
-const sendInfoToANewUserAboutOldUsers = () => {
-    const client = clientsStorage[clientsStorage.length-1];
-    for (let i = 0; i < clientsStorage.length-1; i++) {
+const sendInfoToANewUserAboutOldUsers = data => {
+    const client = clientsStorage[clientsStorage.length - 1];
+    for (let i = 0; i < clientsStorage.length - 1; i++) {
         const clientsData = {
-            userId: clientsStorage[i].userId,
+            userId: clientsStorage[i].id,
             username: clientsStorage[i].username,
-            type: 'user',
-            amount: wsServer.clients.size
+            amount: io.engine.clientsCount
         }
-        client.send(JSON.stringify(clientsData));
+        if (data.type === 'remove-user') {
+            client.emit(data.type, data)
+        } else {
+            client.emit(data.type, clientsData)
+        }
     }
 }
-const sendAll = (data) => {
-    sendInfoToANewUserAboutOldUsers();
+
+const sendAll = (data) => {    
+    sendInfoToANewUserAboutOldUsers(data);
     for (let client of clientsStorage) {
-        client.send(JSON.stringify(data))
+        client.emit(data.type, data)
     }
 }
 
-wsServer.on('connection', (ws, req) => {
-    ws.userId = req.headers['sec-websocket-key'];
-    ws.username = `user-${ws.userId.substr(0, 6)}`;
-    clientsStorage.push(ws)
-    data = {
-        userId: ws.userId,
-        username: ws.username,
-        type: 'user',
-        amount: wsServer.clients.size
-    }
-    sendAll(data);
-
-    ws.on('message', data => {
-        wsServer.clients.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                const parsedData = JSON.parse(data);
-                if (parsedData.type === 'edit-username') {                    
-                    const index = clientsStorage.findIndex(clientData => clientData.userId === parsedData.userId)
-                    if (index >= 0) {
-                        clientsStorage[index].username = parsedData.username
-                    }
-                }
-                client.send(data);
-            }
-        })
-    })
-
-    ws.on('close', () => {
+io.on('connection', socket => {
+    socket.on('create-new-user', () => {
+        const userId = socket.id;
+        socket.username = `user-${userId.substr(0, 6)}`;
+        clientsStorage.push(socket)
         data = {
-            type: 'remove-user',
-            amount: wsServer.clients.size
+            type: 'add-new-user',
+            userId,
+            username: socket.username,
+            amount: io.engine.clientsCount
         }
-        sendAll(data)
+        sendAll(data);
     })
-})
+
+    socket.on('edit-username', data => {
+        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+        if (index >= 0) {
+            clientsStorage[index].username = data.username;
+            sendAll({
+                type: 'edit-username',
+                userId: clientsStorage[index].id,
+                username: data.username
+            })
+        }
+    })
+
+    socket.on('disconnect', () => {
+        const index = clientsStorage.findIndex(clientData => clientData.id === socket.id)
+        if (index >= 0) {
+            clientsStorage.splice(index, 1)
+            sendAll({
+                type: 'remove-user',
+                amount: io.engine.clientsCount,
+                userId: socket.id
+            })        
+        }
+    })
+});
