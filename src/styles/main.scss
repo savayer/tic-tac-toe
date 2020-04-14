@@ -1,3 +1,5 @@
+@import 'mixins';
+
 * {
     box-sizing: border-box;
 }
@@ -69,13 +71,16 @@ body {
     left: 10px;
     top: 10px;
     border: 1px solid #ccc;
-    padding: 5px;
+    padding: 5px 12px;
     width: 200px;
+    @include max(1100) {
+        position: static;
+    }
 }
 
 .players {
     width: 100%;
-    padding-left: 20px;
+    padding: 0;
     li {
         margin: 6px 0;
         display: flex;

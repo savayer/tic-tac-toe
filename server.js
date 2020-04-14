@@ -56,6 +56,27 @@ io.on('connection', socket => {
     }
     broadcast(data);
 
+    socket.on('invite-user', data => {
+        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+        if (index >= 0) {
+            clientsStorage[index].emit('getting-invite', {
+                username: data.currentUsername,
+                userId: data.currentUserId
+            })
+        }       
+    })
+
+    socket.on('user-declined-invite', data => {        
+        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+        if (index >= 0) {
+            clientsStorage[index].emit('info', `${clientsStorage[index].username} declined your invite`)
+        }
+    })
+
+    socket.on('start-game', () => {
+        socket.emit('info', 'мутим комнату для игры')
+    })
+
     socket.on('edit-username', data => {
         const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
         if (index >= 0) {

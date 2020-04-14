@@ -1,4 +1,5 @@
-import io from 'socket.io-client'
+import io from 'socket.io-client';
+import invite from './socket/invite';
 
 let socket = io.connect('http://localhost:9000');
 
@@ -24,16 +25,22 @@ socket.on('add-new-user', data => {
         $li.appendChild($username);
     }
     
-    const addInvite = () => {
-        const $invite = document.createElement('span');
-        $invite.innerText = 'invite';
-        $invite.classList.add('invite');
-        $li.appendChild($invite);
+    const addInvite = () => {        
+        return new Promise(resolve => {
+            const $invite = document.createElement('span');
+            $invite.innerText = 'invite';
+            $invite.classList.add('invite');
+            $li.appendChild($invite);
+            resolve();
+        })
     }
 
     addUsername();
     if (socket.id !== data.userId) {
-        addInvite();
+        addInvite()
+        .then(() => {
+            invite(socket);
+        })
     }
 
     $players.appendChild($li);
@@ -55,6 +62,32 @@ socket.on('remove-user', data => {
         $user.closest('li').remove()
         $amountUsers.innerText = data.amount
     }
+})
+
+socket.on('getting-invite', data => {
+    const invite = `${data.username} invites you to game. Let's go?`
+    const currentUser = document.querySelector('.username.bold')
+    const currentUserId = currentUser.dataset.id
+    const currentUsername = currentUser.innerText
+    const userId = data.userId
+    if (confirm(invite)) {
+        socket.emit('start-game')
+    } else {
+        socket.emit('user-declined-invite', {
+            currentUserId,
+            currentUsername,
+            userId
+        })
+    }
+})
+
+socket.on('info', data => {
+    alert(data)
+})
+
+socket.on('game-step', data => {
+    console.log(data)
+    
 })
 
 export default socket;
