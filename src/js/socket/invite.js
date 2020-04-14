@@ -1,15 +1,13 @@
 const invite = (s) => {
     document.querySelectorAll('.invite').forEach(item => {
-        const currentUser = document.querySelector('.username.bold')
-        const currentUserId = currentUser.dataset.id
-        const currentUsername = currentUser.innerText
-    
+        const currentUserId = document.querySelector('.username.bold').dataset.id
+
         item.addEventListener('click', function() {
-            const userId = this.previousElementSibling.dataset.id
+            const invitedUserId = this.previousElementSibling.dataset.id
+            console.log('invite-user')
             s.emit('invite-user', {
-                userId,
-                currentUserId,
-                currentUsername
+                invitedUserId,
+                currentUserId
             })
         })
     })

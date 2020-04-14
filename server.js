@@ -43,6 +43,10 @@ const broadcast = (data) => {
     }
 }
 
+const findIndex = findingIndex => {
+    return clientsStorage.findIndex(clientData => clientData.id === findingIndex)
+}
+
 io.on('connection', socket => {
     const userId = socket.id;
     socket.username = `user-${userId.substr(0, 6)}`;
@@ -57,19 +61,19 @@ io.on('connection', socket => {
     broadcast(data);
 
     socket.on('invite-user', data => {
-        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+        const index = findIndex(data.invitedUserId); // юзер которого приглашают
         if (index >= 0) {
             clientsStorage[index].emit('getting-invite', {
-                username: data.currentUsername,
-                userId: data.currentUserId
+                invitedUserId: data.invitedUserId,
+                currentUserId: data.currentUserId
             })
         }       
     })
 
-    socket.on('user-declined-invite', data => {        
-        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+    socket.on('user-declined-invite', data => {
+        const index = findIndex(data.currentUserId);
         if (index >= 0) {
-            clientsStorage[index].emit('info', `${clientsStorage[index].username} declined your invite`)
+            clientsStorage[index].emit('info', `${data.invitedUsername} declined your invite`)
         }
     })
 
@@ -78,7 +82,7 @@ io.on('connection', socket => {
     })
 
     socket.on('edit-username', data => {
-        const index = clientsStorage.findIndex(clientData => clientData.id === data.userId)
+        const index = findIndex(data.userId);
         if (index >= 0) {
             clientsStorage[index].username = data.username;
             broadcast({
@@ -91,7 +95,7 @@ io.on('connection', socket => {
     })
 
     socket.on('disconnect', () => {
-        const index = clientsStorage.findIndex(clientData => clientData.id === socket.id)
+        const index = findIndex(socket.id);
         if (index >= 0) {
             clientsStorage.splice(index, 1)
             broadcast({

@@ -35,7 +35,7 @@ gulp.task('html', () => {
 })
 
 gulp.task('scripts', () => {
-    return gulp.src('./src/js/*.js')
+    return gulp.src('./src/js/**/*.js')
         .pipe(webpackStream(webpackConfig), webpack)
         .pipe(gulp.dest('./dist/js'))
         .on("end", browserSync.reload);
@@ -82,7 +82,7 @@ gulp.task('serve', () => {
 
     gulp.watch(['./src/*.html'], gulp.parallel('html'));
     gulp.watch(['./src/styles/*.scss'], gulp.parallel('styles'));
-    gulp.watch(['./src/js/*.js', './index.js'], gulp.parallel('scripts'));
+    gulp.watch(['./src/js/**/*.js', './index.js'], gulp.parallel('scripts'));
 })
 
 gulp.task('prod', gulp.series(
