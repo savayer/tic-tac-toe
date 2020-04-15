@@ -1,5 +1,3 @@
-import invite from './invite';
-
 const addUsername = (node, data, socket) => {
     const $username = document.createElement('span');
     $username.classList.add('username');
@@ -11,14 +9,19 @@ const addUsername = (node, data, socket) => {
     node.appendChild($username);
 }
 
-const addInvite = node => {
-    return new Promise(resolve => {
+const addInvite = (node, s) => {    
         const $invite = document.createElement('span');
         $invite.innerText = 'invite';
         $invite.classList.add('invite');
+        $invite.addEventListener('click', function() {
+            const currentUserId = document.querySelector('.username.bold').dataset.id
+            const invitedUserId = this.previousElementSibling.dataset.id
+            s.emit('invite-user', {
+                invitedUserId,
+                currentUserId
+            })
+        })
         node.appendChild($invite);
-        resolve();
-    })
 }
 
 const addNewUser = (data, socket) => {
@@ -35,7 +38,7 @@ const addNewUser = (data, socket) => {
 
     addUsername($li, data, socket);
     if (socket.id !== data.userId) {
-        addInvite($li).then(() => invite(socket))
+        addInvite($li, socket);
     }
 
     $players.appendChild($li);
