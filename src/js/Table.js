@@ -6,6 +6,14 @@ class Table {
         Cell.init()
     }
 
+    activateTable() {
+        this.table.classList.remove('unactive')
+    }
+
+    deactivateTable() {
+        this.table.classList.add('unactive')
+    }
+
     createTable() {
         const table = this.table
         const thead = document.createElement("thead");

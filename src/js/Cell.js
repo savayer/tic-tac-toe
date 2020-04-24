@@ -1,3 +1,7 @@
+import socket from './socket';
+
+const roomName = sessionStorage.getItem('roomName')
+
 export default {
     matrix: [],
     userCoordinates: [],
@@ -10,7 +14,15 @@ export default {
                 return;
             }
             el.classList.add('tic')
-            this.syncMatrix(+el.dataset.x, +el.dataset.y)
+            const x = +el.dataset.x
+            const y = +el.dataset.y
+
+            socket.to(roomName).emit('game-step', {
+                x,y,
+                type: 'x'
+            })
+
+            this.syncMatrix(x, y)
             this.checkWin()
         })
     },

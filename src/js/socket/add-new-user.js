@@ -16,9 +16,11 @@ const addInvite = (node, s) => {
         $invite.addEventListener('click', function() {
             const currentUserId = document.querySelector('.username.bold').dataset.id
             const invitedUserId = this.previousElementSibling.dataset.id
+            const currentUsername = document.querySelector('.username.bold').innerHTML
             s.emit('invite-user', {
                 invitedUserId,
-                currentUserId
+                currentUserId,
+                currentUsername
             })
         })
         node.appendChild($invite);
@@ -26,7 +28,7 @@ const addInvite = (node, s) => {
 
 const addNewUser = (data, socket) => {
     const $user = document.querySelector(`span.username[data-id="${data.userId}"]`)
-    if ($user) {
+    if ($user && $user.innerText === sessionStorage.getItem('username')) {
         return;
     }
 

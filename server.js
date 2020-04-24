@@ -77,8 +77,28 @@ io.on('connection', socket => {
         }
     })
 
-    socket.on('start-game', () => {
-        socket.emit('info', 'мутим комнату для игры')
+    socket.on('start-game', data => {
+        //socket.emit('info', 'мутим комнату для игры')
+        const roomName = data.currentUserId + '-' + data.invitedUserId
+        const invitedUser = clientsStorage[findIndex(data.invitedUserId)]
+        const currentUser = clientsStorage[findIndex(data.currentUserId)]
+        if (invitedUser && currentUser) {
+            invitedUser.join(roomName)
+            currentUser.join(roomName)
+            //console.log(invitedUser.adapter.rooms)
+            const startGame = {
+                ...data,
+                message: 'Well, let\'s start the game',
+                your_turn: false,
+                roomName
+            }
+            invitedUser.emit('game-start', startGame)
+            currentUser.emit('game-start', {
+                ...startGame,
+                your_turn: true
+            })
+        }
+
     })
 
     socket.on('edit-username', data => {

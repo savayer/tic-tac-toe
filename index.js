@@ -13,11 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (promise) {
         promise.then(editUsername)
-    }    
+    }
     init();
-
-
-    /* fetch('http://ip-api.com/json')
-    .then(res => res.json())
-    .then(json => console.log(json)); */
 })
