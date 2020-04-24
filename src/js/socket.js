@@ -28,7 +28,7 @@ socket.on('getting-invite', data => {
     const invitedUsername = document.querySelector(`span.username[data-id="${data.invitedUserId}"]`).innerText
     const invite = `${currentUsername} invites you to game. Let's go?`    
     if (confirm(invite)) {
-        socket.emit('start-game', data)
+        socket.emit('game-prepare', data)
     } else {
         socket.emit('user-declined-invite', {
             invitedUserId: data.invitedUserId,
@@ -53,9 +53,19 @@ socket.on('game-start', data => {
 
     if (data.your_turn) {
         message.setMessage('Your turn')
+        sessionStorage.setItem('userData', JSON.stringify({
+            type: 'x',
+            userId: data.currentUserId,
+            opponentUserId: data.invitedUserId
+        }))
         tableObject.activateTable()
     } else {
         message.setMessage('Opponent\'s turn')
+        sessionStorage.setItem('userData', JSON.stringify({
+            type: 'o',
+            userId: data.invitedUserId,
+            opponentUserId: data.currentUserId
+        }))
     }
 })
 

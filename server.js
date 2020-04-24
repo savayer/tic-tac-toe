@@ -61,25 +61,16 @@ io.on('connection', socket => {
     broadcast(data);
 
     socket.on('invite-user', data => {
-        const index = findIndex(data.invitedUserId); // юзер которого приглашают
-        if (index >= 0) {
-            clientsStorage[index].emit('getting-invite', {
-                invitedUserId: data.invitedUserId,
-                currentUserId: data.currentUserId
-            })
-        }       
+        io.to(data.invitedUserId).emit('getting-invite', data)
     })
 
     socket.on('user-declined-invite', data => {
-        const index = findIndex(data.currentUserId);
-        if (index >= 0) {
-            clientsStorage[index].emit('info', `${data.invitedUsername} declined your invite`)
-        }
+        io.to(data.currentUserId).emit('info', `${data.invitedUsername} declined your invite`)
     })
 
-    socket.on('start-game', data => {
+    socket.on('game-prepare', data => {
         //socket.emit('info', 'мутим комнату для игры')
-        const roomName = data.currentUserId + '-' + data.invitedUserId
+        const roomName = data.currentUserId + '___' + data.invitedUserId
         const invitedUser = clientsStorage[findIndex(data.invitedUserId)]
         const currentUser = clientsStorage[findIndex(data.currentUserId)]
         if (invitedUser && currentUser) {
@@ -99,6 +90,10 @@ io.on('connection', socket => {
             })
         }
 
+    })
+
+    socket.on('game-step', data => {
+        io.to(data.userId).emit('game-step-client', data)
     })
 
     socket.on('edit-username', data => {

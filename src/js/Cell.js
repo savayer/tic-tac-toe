@@ -1,8 +1,6 @@
 import socket from './socket';
 
-const roomName = sessionStorage.getItem('roomName')
-
-export default {
+const gameProcess = {
     matrix: [],
     userCoordinates: [],
     compCoordinates: [],
@@ -13,18 +11,37 @@ export default {
             if (el.classList.contains('tic') || el.classList.contains('tac')) {
                 return;
             }
-            el.classList.add('tic')
+            const userData = JSON.parse(sessionStorage.getItem('userData'))
+            const roomName = sessionStorage.getItem('roomName')
+            console.log(userData, roomName)
             const x = +el.dataset.x
             const y = +el.dataset.y
+            const userId = userData.opponentUserId
+            let className, type, currentUser = false
 
-            socket.to(roomName).emit('game-step', {
-                x,y,
-                type: 'x'
-            })
-
-            this.syncMatrix(x, y)
+            if (userData.type === 'x') {
+                className = 'tic' // x
+                type = 'x'
+                currentUser = true
+            } else {
+                className = 'tac' // o
+                type = 'o'
+                currentUser = false
+            }
+            el.classList.add(className)
+            this.syncMatrix(x, y, currentUser)
+            socket.emit('game-step', {x, y, type, className, currentUser, roomName, userId})
             this.checkWin()
         })
+    },
+    syncClick(syncData) {
+        const x = syncData.x
+        const y = syncData.y
+        const el = document.querySelector(`td[data-x="${x}"][data-y="${y}"]`)
+        el.classList.add(syncData.className)
+
+        this.syncMatrix(x, y, syncData.currentUser)
+        this.checkWin()
     },
     init() {
         this.game = true        
@@ -229,3 +246,10 @@ export default {
         console.log('%c' + message, 'font-size: 3em;color:red')
     }
 }
+
+socket.on('game-step-client', data => {
+    console.log(data)
+    gameProcess.syncClick(data)
+})
+
+export default gameProcess;
