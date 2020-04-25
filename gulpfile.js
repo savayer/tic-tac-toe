@@ -66,9 +66,9 @@ gulp.task("styles", () => {
                 }
             }
         })))
-        .pipe(gulpif(production, rename({
+        /* .pipe(gulpif(production, rename({
             suffix: ".min"
-        })))
+        }))) */
         .pipe(gulp.dest('./dist/css/'))
         .pipe(browserSync.stream());
 });
