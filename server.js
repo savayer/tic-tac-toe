@@ -97,7 +97,12 @@ io.on('connection', socket => {
     })
 
     socket.on('game-finish', data => {
-        io.to(data.userId).emit('game-finish-client', data)
+        const invitedUser = clientsStorage[findIndex(data.invitedUserId)]
+        const user = clientsStorage[findIndex(data.userId)]
+        if (invitedUser && user) {
+            invitedUser.leave(data.roomName)
+            user.leave(data.roomName)
+        }
     })
 
     socket.on('edit-username', data => {

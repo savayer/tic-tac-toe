@@ -84,22 +84,14 @@ const gameProcess = {
             if (vertical === 'x') {
                 if (this.userData.type === 'x') {
                     this.endGane('You won!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             } else {
                 if (this.userData.type === 'o') {
                     this.endGane('You won!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             }
             message.clearMessage()
@@ -107,22 +99,14 @@ const gameProcess = {
             if (horizontal === 'x') {
                 if (this.userData.type === 'x') {
                     this.endGane('You won!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             } else {
                 if (this.userData.type === 'o') {
                     this.endGane('You won!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             }
             message.clearMessage()
@@ -131,22 +115,14 @@ const gameProcess = {
             if (diagonal === 'x') {
                 if (this.userData.type === 'x') {
                     this.endGane('You won!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             } else {
                 if (this.userData.type === 'o') {
                     this.endGane('You won!')
-                    const userId = this.userData.userId
-                    socket.emit('finish-game', {userId, message: 'You lose!'})
                 } else {
                     this.endGane('You lose!')
-                    const userId = this.userData.opponentUserId
-                    socket.emit('finish-game', {userId, message: 'You won!'})
                 }
             }
             message.clearMessage()
@@ -322,6 +298,8 @@ const gameProcess = {
         this.game = false
         //console.log('%c' + message, 'font-size: 3em;color:red')
         alert(message)
+        socket.emit('game-finish', this.userData)
+        sessionStorage.clear()
         tableObject.clearTable()
         this.init()
     }
@@ -329,12 +307,6 @@ const gameProcess = {
 
 socket.on('game-step-client', data => {
     gameProcess.syncClick(data)
-})
-
-socket.on('game-finish-client', data => {
-    alert(data.message)
-    tableObject.clearTable()
-    gameProcess.init()
 })
 
 export default gameProcess;

@@ -50,15 +50,14 @@ socket.on('console-info', data => {
 
 socket.on('game-start', data => {
     alert(data.message)
-    
-    //sessionStorage.setItem('roomName', data.roomName)
 
     if (data.your_turn) {
         message.setMessage('Your turn')
         sessionStorage.setItem('userData', JSON.stringify({
             type: 'x',
             userId: data.currentUserId,
-            opponentUserId: data.invitedUserId
+            opponentUserId: data.invitedUserId,
+            roomName: data.roomName
         }))
         tableObject.activateTable()
     } else {
@@ -66,7 +65,8 @@ socket.on('game-start', data => {
         sessionStorage.setItem('userData', JSON.stringify({
             type: 'o',
             userId: data.invitedUserId,
-            opponentUserId: data.currentUserId
+            opponentUserId: data.currentUserId,
+            roomName: data.roomName
         }))
     }
 })
