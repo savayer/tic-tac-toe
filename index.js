@@ -1,6 +1,7 @@
 import init from "__js/init";
 import socket from "__js/socket";
 import input from "__js/inputName";
+import expand from "__js/dom/expandUsers";
 
 document.addEventListener('DOMContentLoaded', () => {
     const editUsername = data => {
@@ -15,4 +16,5 @@ document.addEventListener('DOMContentLoaded', () => {
         promise.then(editUsername)
     }
     init();
+    expand();
 })
