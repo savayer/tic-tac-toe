@@ -58,6 +58,12 @@ body {
     font-size: 30px;
     color: #ca4c4c;
     font-family: sans-serif;
+    @include max(500) {
+        font-size: 24px;
+        text-align: left;
+        margin-top: 70px;
+        margin-left: 20px;
+    }
 }
 .app_wrapper {
     margin: auto;
@@ -195,7 +201,7 @@ span#expand_more {
     &.active {
         visibility: visible;
         opacity: 1;
-        z-index: 100;
+        z-index: 101;
     }
 }
 
