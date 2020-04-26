@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require("webpack");
+
 const config = {
     entry: './index.js',
     output: {
@@ -15,6 +17,11 @@ const config = {
             __js: path.resolve(__dirname, './src/js/')
         }
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env.SITE_URL": JSON.stringify("http://localhost:9000")
+        })
+    ],
     module: {
         rules: [
             {

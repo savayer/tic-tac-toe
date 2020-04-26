@@ -1,4 +1,6 @@
-const port = 9000;
+require('dotenv').config();
+
+const port = process.env.PORT;
 const express = require('express');
 const app = require('express')();
 const server = require('http').Server(app);
