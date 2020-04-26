@@ -16,9 +16,7 @@ const inputName = (callback) => {
         })
     }
     overlay.classList.add('active')
-    setTimeout(() => {
-        input.focus()        
-    }, 500)
+
     input.addEventListener('keyup', e => {
         if (e.keyCode === 13) {
             if (input.value.length >= 2) {

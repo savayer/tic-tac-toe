@@ -10,20 +10,20 @@ const addUsername = (node, data, socket) => {
 }
 
 const addInvite = (node, s) => {    
-        const $invite = document.createElement('span');
-        $invite.innerText = 'invite';
-        $invite.classList.add('invite');
-        $invite.addEventListener('click', function() {
-            const currentUserId = document.querySelector('.username.bold').dataset.id
-            const invitedUserId = this.previousElementSibling.dataset.id
-            const currentUsername = document.querySelector('.username.bold').innerHTML
-            s.emit('invite-user', {
-                invitedUserId,
-                currentUserId,
-                currentUsername
-            })
+    const $invite = document.createElement('span');
+    $invite.innerText = 'invite';
+    $invite.classList.add('invite');
+    $invite.addEventListener('click', function() {
+        const currentUserId = document.querySelector('.username.bold').dataset.id
+        const invitedUserId = this.previousElementSibling.dataset.id
+        const currentUsername = document.querySelector('.username.bold').innerHTML
+        s.emit('invite-user', {
+            invitedUserId,
+            currentUserId,
+            currentUsername
         })
-        node.appendChild($invite);
+    })
+    node.appendChild($invite);
 }
 
 const addNewUser = (data, socket) => {
