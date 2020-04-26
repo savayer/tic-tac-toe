@@ -143,7 +143,7 @@ export default {
         for (let coord of this.compCoordinates) {
             if (coord.x + 5 <= 20) {
                 for (let count = coord.x; count < coord.x+5; count++) {
-                    if (matrix[count][coord.y+countUser] === 'C' || matrix[count][coord.y-countUser] === 'C') {                    
+                    if (matrix[count][coord.y+countComp] === 'C' || matrix[count][coord.y-countComp] === 'C') {                    
                         countComp++
                     } else {
                         countComp = 0;
@@ -152,7 +152,7 @@ export default {
                 }
             } else {
                 for (let count = coord.x; count < coord.x-5; count--) {
-                    if (matrix[count][coord.y+countUser] === 'C' || matrix[count][coord.y-countUser] === 'C') {
+                    if (matrix[count][coord.y+countComp] === 'C' || matrix[count][coord.y-countComp] === 'C') {
                         countComp++
                     } else {
                         countComp = 0;
