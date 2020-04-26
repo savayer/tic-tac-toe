@@ -26,7 +26,7 @@ socket.on('remove-user', data => {
 socket.on('getting-invite', data => {
     const currentUsername = document.querySelector(`span.username[data-id="${data.currentUserId}"]`).innerText
     const invitedUsername = document.querySelector(`span.username[data-id="${data.invitedUserId}"]`).innerText
-    const invite = `${currentUsername} invites you to game. Let's go?`   
+    const invite = `${currentUsername} invites you to the game. Let's go?`   
     
     message.showInvite(invite, () => {
         socket.emit('game-prepare', data)
