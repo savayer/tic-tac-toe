@@ -70,12 +70,12 @@ io.on('connection', socket => {
 
     socket.on('game-prepare', data => {
         //socket.emit('info', 'мутим комнату для игры')
-        //const roomName = data.currentUserId + '___' + data.invitedUserId
+        const roomName = data.currentUserId + '___' + data.invitedUserId
         const invitedUser = clientsStorage[findIndex(data.invitedUserId)]
         const currentUser = clientsStorage[findIndex(data.currentUserId)]
         if (invitedUser && currentUser) {
-            /* invitedUser.join(roomName)
-            currentUser.join(roomName) */
+            invitedUser.join(roomName)
+            currentUser.join(roomName)
             //console.log(invitedUser.adapter.rooms)
             const startGame = {
                 ...data,
