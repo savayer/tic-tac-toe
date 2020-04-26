@@ -1,6 +1,10 @@
 import socket from './socket';
+import { tableObject } from './init';
+import { message } from './init';
+import init from './init';
 
 const gameProcess = {
+    userData: null,
     matrix: [],
     userCoordinates: [],
     compCoordinates: [],
@@ -11,15 +15,14 @@ const gameProcess = {
             if (el.classList.contains('tic') || el.classList.contains('tac')) {
                 return;
             }
-            const userData = JSON.parse(sessionStorage.getItem('userData'))
-            const roomName = sessionStorage.getItem('roomName')
-            console.log(userData, roomName)
+            this.userData = JSON.parse(sessionStorage.getItem('userData'))
+            //const roomName = sessionStorage.getItem('roomName')
             const x = +el.dataset.x
             const y = +el.dataset.y
-            const userId = userData.opponentUserId
+            const userId = this.userData.opponentUserId
             let className, type, currentUser = false
 
-            if (userData.type === 'x') {
+            if (this.userData.type === 'x') {
                 className = 'tic' // x
                 type = 'x'
                 currentUser = true
@@ -31,6 +34,8 @@ const gameProcess = {
             el.classList.add(className)
             this.syncMatrix(x, y, currentUser)
             socket.emit('game-step', {x, y, type, className, currentUser, roomName, userId})
+            tableObject.deactivateTable()
+            message.setMessage('Opponent\'s turn')
             this.checkWin()
         })
     },
@@ -41,6 +46,8 @@ const gameProcess = {
         el.classList.add(syncData.className)
 
         this.syncMatrix(x, y, syncData.currentUser)
+        tableObject.activateTable()
+        message.setMessage('Your turn')
         this.checkWin()
     },
     init() {
@@ -66,13 +73,84 @@ const gameProcess = {
         const vertical = this.checkVertical()
         const horizontal = this.checkHorizontal()
         const diagonal = this.checkDiagonal()
-        if (vertical) {
-            vertical === 'user' ? this.endGane('You win') : this.endGane('Computer wins');            
+        /* if (vertical) {
+            vertical === 'x' ? this.endGane('You won!') : this.endGane('Computer wins');            
         } else if (horizontal) {
-            horizontal === 'user' ? this.endGane('You win') : this.endGane('Computer wins');
+            horizontal === 'x' ? this.endGane('You won!') : this.endGane('Computer wins');
         } 
         else if (diagonal) {
-            diagonal === 'user' ? this.endGane('You win') : this.endGane('Computer wins');
+            diagonal === 'x' ? this.endGane('You won!') : this.endGane('Computer wins');
+        } */
+        if (vertical) {
+            if (vertical === 'x') {
+                if (this.userData.type === 'x') {
+                    this.endGane('You won!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            } else {
+                if (this.userData.type === 'o') {
+                    this.endGane('You won!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            }
+            message.clearMessage()
+        } else if (horizontal) {
+            if (horizontal === 'x') {
+                if (this.userData.type === 'x') {
+                    this.endGane('You won!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            } else {
+                if (this.userData.type === 'o') {
+                    this.endGane('You won!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            }
+            message.clearMessage()
+        } 
+        else if (diagonal) {
+            if (diagonal === 'x') {
+                if (this.userData.type === 'x') {
+                    this.endGane('You won!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            } else {
+                if (this.userData.type === 'o') {
+                    this.endGane('You won!')
+                    const userId = this.userData.userId
+                    socket.emit('finish-game', {userId, message: 'You lose!'})
+                } else {
+                    this.endGane('You lose!')
+                    const userId = this.userData.opponentUserId
+                    socket.emit('finish-game', {userId, message: 'You won!'})
+                }
+            }
+            message.clearMessage()
         }
     },
     checkVertical() {
@@ -101,7 +179,7 @@ const gameProcess = {
                 }
             }
             if (countUser === 5) {
-                return 'user'
+                return 'x'
             }
         }
         
@@ -126,7 +204,7 @@ const gameProcess = {
                 }
             }
             if (countComp === 5) {
-                return 'computer'
+                return 'o'
             }
         }
     },
@@ -157,7 +235,7 @@ const gameProcess = {
             }
             
             if (countUser === 5) {
-                return 'user'
+                return 'x'
             }
         }
 
@@ -182,7 +260,7 @@ const gameProcess = {
                 }
             }            
             if (countComp === 5) {
-                return 'computer'
+                return 'o'
             }
         }      
     },
@@ -212,7 +290,7 @@ const gameProcess = {
                 }
             }        
             if (countUser === 5) {
-                return 'user'
+                return 'x'
             }
         }
 
@@ -237,19 +315,25 @@ const gameProcess = {
                 }
             }        
             if (countComp === 5) {
-                return 'computer'
+                return 'o'
             }
         }
     },
     endGane(message) {
         this.game = false
-        console.log('%c' + message, 'font-size: 3em;color:red')
+        //console.log('%c' + message, 'font-size: 3em;color:red')
+        alert(message)
+        init()
     }
 }
 
 socket.on('game-step-client', data => {
-    console.log(data)
     gameProcess.syncClick(data)
+})
+
+socket.on('game-finish-client', data => {
+    alert(data.message)
+    init()
 })
 
 export default gameProcess;

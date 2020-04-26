@@ -12,14 +12,11 @@ const message = {
     }
 }
 
-export {message} 
+export { message } 
 export { tableObject }
 export default function init() {
     const $app = document.getElementById('app')
-
-    $app.innerHTML = ""        
-        
+    $app.innerHTML = ""
     tableObject.createTable()
-
     $app.appendChild(table)
 }

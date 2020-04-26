@@ -26,7 +26,8 @@ socket.on('remove-user', data => {
 socket.on('getting-invite', data => {
     const currentUsername = document.querySelector(`span.username[data-id="${data.currentUserId}"]`).innerText
     const invitedUsername = document.querySelector(`span.username[data-id="${data.invitedUserId}"]`).innerText
-    const invite = `${currentUsername} invites you to game. Let's go?`    
+    const invite = `${currentUsername} invites you to game. Let's go?`   
+    //alert(invite); 
     if (confirm(invite)) {
         socket.emit('game-prepare', data)
     } else {
@@ -40,6 +41,7 @@ socket.on('getting-invite', data => {
 
 socket.on('info', data => {
     alert(data)
+    //message.setMessage(data)
 })
 
 socket.on('console-info', data => {
@@ -49,7 +51,7 @@ socket.on('console-info', data => {
 socket.on('game-start', data => {
     alert(data.message)
     
-    sessionStorage.setItem('roomName', data.roomName)
+    //sessionStorage.setItem('roomName', data.roomName)
 
     if (data.your_turn) {
         message.setMessage('Your turn')
