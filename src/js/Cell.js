@@ -1,7 +1,6 @@
 import socket from './socket';
 import { tableObject } from './init';
-import { message } from './init';
-import init from './init';
+import message from './dom/message';
 
 const gameProcess = {
     userData: null,
@@ -33,7 +32,7 @@ const gameProcess = {
             }
             el.classList.add(className)
             this.syncMatrix(x, y, currentUser)
-            socket.emit('game-step', {x, y, type, className, currentUser, roomName, userId})
+            socket.emit('game-step', {x, y, type, className, currentUser, userId})
             tableObject.deactivateTable()
             message.setMessage('Opponent\'s turn')
             this.checkWin()
@@ -323,7 +322,8 @@ const gameProcess = {
         this.game = false
         //console.log('%c' + message, 'font-size: 3em;color:red')
         alert(message)
-        init()
+        tableObject.clearTable()
+        this.init()
     }
 }
 
@@ -333,7 +333,8 @@ socket.on('game-step-client', data => {
 
 socket.on('game-finish-client', data => {
     alert(data.message)
-    init()
+    tableObject.clearTable()
+    gameProcess.init()
 })
 
 export default gameProcess;

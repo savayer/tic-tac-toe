@@ -14,6 +14,12 @@ class Table {
         this.table.classList.add('unactive')
     }
 
+    clearTable() {
+        this.table.querySelectorAll('td').forEach(td => {
+            td.setAttribute('class', '')
+        })
+    }
+
     createTable() {
         const table = this.table
         const thead = document.createElement("thead");

@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { tableObject } from './init';
-import { message } from './init';
+import message from './dom/message';
 import addNewUser from './socket/add-new-user';
 
 const socket = io.connect('http://localhost:9000');
@@ -27,16 +27,16 @@ socket.on('getting-invite', data => {
     const currentUsername = document.querySelector(`span.username[data-id="${data.currentUserId}"]`).innerText
     const invitedUsername = document.querySelector(`span.username[data-id="${data.invitedUserId}"]`).innerText
     const invite = `${currentUsername} invites you to game. Let's go?`   
-    //alert(invite); 
-    if (confirm(invite)) {
+    
+    message.showInvite(invite, () => {
         socket.emit('game-prepare', data)
-    } else {
+    }, () => {
         socket.emit('user-declined-invite', {
             invitedUserId: data.invitedUserId,
             currentUserId: data.currentUserId,
             invitedUsername
         })
-    }
+    })
 })
 
 socket.on('info', data => {
