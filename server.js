@@ -97,10 +97,10 @@ io.on('connection', socket => {
     })
 
     socket.on('game-finish', data => {
-        const invitedUser = clientsStorage[findIndex(data.invitedUserId)]
+        const opponentUser = clientsStorage[findIndex(data.opponentUserId)]
         const user = clientsStorage[findIndex(data.userId)]
-        if (invitedUser && user) {
-            invitedUser.leave(data.roomName)
+        if (opponentUser && user) {
+            opponentUser.leave(data.roomName)
             user.leave(data.roomName)
         }
     })
