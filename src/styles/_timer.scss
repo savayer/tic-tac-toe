@@ -1,0 +1,49 @@
+$activeColor: #6c6;
+$usualColor: #ddd;
+
+.timer {
+    background: linear-gradient(90deg, $activeColor 50%, $usualColor 50%);
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;    
+    position: absolute;
+    top: 0;
+    left: 105%;
+    display: none;
+    &.start {
+        display: block;
+    }
+    &:after {
+        content: '';
+        border-radius: 100% 0 0 100% / 50% 0 0 50%;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transform-origin: 100% 50%;
+        width: 50%;
+    }
+
+    &.start:after {
+        animation: mask 10s steps(10, start) forwards;
+    }
+}
+
+@keyframes mask {
+    0% {
+        background: $usualColor;
+        transform: rotate(0deg);
+    }
+    50% {
+        background: $usualColor;
+        transform: rotate(-180deg);
+    }
+    50.01% {
+        background: $activeColor;
+        transform: rotate(0deg);
+    }
+    100% {
+        background: $activeColor;
+        transform: rotate(-180deg);
+    }
+}

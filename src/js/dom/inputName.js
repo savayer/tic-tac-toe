@@ -1,4 +1,4 @@
-import socket from "./socket"
+import socket from "./../socket"
 
 const inputName = (callback) => {
     const overlay = document.querySelector('.overlay')

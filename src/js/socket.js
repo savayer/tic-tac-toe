@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import { tableObject } from './init';
 import message from './dom/message';
-import addNewUser from './socket/add-new-user';
+import addNewUser from './dom/add-new-user';
 
 const socket = io.connect(process.env.SITE_URL);
 

@@ -6,19 +6,31 @@ const message = {
         document.querySelector('#message').innerHTML = ''
     },
     showInvite(inviteMessage, acceptCb, declineCb) {
-        const inviteWrapper = document.querySelector('.getting-invite');        
-        const accept = document.getElementById('accept_invite')
-        const decline = document.getElementById('decline_invite')
+        const template = document.getElementById('notify')
+        const notifyBlock = template.content.cloneNode(true)
+        const inviteWrapper = document.querySelector('.getting-invite');
 
-        inviteWrapper.querySelector('.getting-invite__content').innerHTML = inviteMessage
-        inviteWrapper.classList.add('active')
+        const accept = notifyBlock.querySelector('.getting-invite__accept')
+        const decline = notifyBlock.querySelector('.getting-invite__decline')
+
+        const container = notifyBlock.querySelector('.getting-invite__container')
+        container.classList.add('active')
+        
+        notifyBlock.querySelector('.getting-invite__content').innerHTML = inviteMessage
+        inviteWrapper.appendChild(notifyBlock)
+
+        setTimeout(() => {
+            if (container.classList.contains('active')) {
+                container.remove()
+            }
+        }, 10000);
 
         accept.addEventListener('click', () => {
-            inviteWrapper.classList.remove('active')
+            container.classList.remove('active')
             acceptCb()
         })
         decline.addEventListener('click', () => {
-            inviteWrapper.classList.remove('active')
+            container.classList.remove('active')
             declineCb()
         })
     }

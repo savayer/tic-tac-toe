@@ -21,25 +21,30 @@
         <ol class="players"></ol>
     </div>
         
+    <div class="getting-invite"></div>
+
     <div class="app_wrapper">
-        <div class="getting-invite">
+        <div id="message"></div>
+        <div id="app"></div>
+    </div>
+
+    <template id="notify">
+        <div class="getting-invite__container">
             <div class="getting-invite__content"></div>
             <div class="getting-invite__buttons">
-                <div id="accept_invite" class="getting-invite__accept">
+                <div class="getting-invite__accept">
                     <span class="material-icons">
                         done
                     </span>
                 </div>
-                <div id="decline_invite" class="getting-invite__decline">
+                <div class="getting-invite__decline">
                     <span class="material-icons">
                         clear
                     </span>
                 </div>
             </div>
         </div>
-        <div id="message"></div>
-        <div id="app"></div>
-    </div>
+    </template>
 
     <script src="js/main.js"></script>
 </body>
