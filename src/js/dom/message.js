@@ -26,12 +26,24 @@ const message = {
         }, 10000);
 
         accept.addEventListener('click', () => {
-            container.classList.remove('active')
+            setTimeout(() => {
+                container.remove()
+            }, 100)
             acceptCb()
         })
         decline.addEventListener('click', () => {
-            container.classList.remove('active')
+            setTimeout(() => {
+                container.remove()
+            }, 100)
             declineCb()
+        })
+    },
+    stopWaitingTimer() {
+        document.querySelectorAll('.timer').forEach(timer => {
+            timer.classList.remove('start')
+            if (timer.previousElementSibling.nodeName === 'SPAN') {
+                timer.previousElementSibling.innerHTML = 'invite'
+            }
         })
     }
 }

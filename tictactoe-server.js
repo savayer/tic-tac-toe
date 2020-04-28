@@ -67,7 +67,10 @@ io.on('connection', socket => {
     })
 
     socket.on('user-declined-invite', data => {
-        io.to(data.currentUserId).emit('info', `${data.invitedUsername} declined your invite`)
+        io.to(data.currentUserId).emit('info', {
+            type: 'decline-invite',
+            message: `${data.invitedUsername} declined your invite`
+        })
     })
 
     socket.on('game-prepare', data => {

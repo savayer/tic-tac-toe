@@ -40,7 +40,12 @@ socket.on('getting-invite', data => {
 })
 
 socket.on('info', data => {
-    alert(data)
+    if (data.type === 'decline-invite') {
+        message.stopWaitingTimer()
+        alert(data.message)
+    } else {
+        alert(data)
+    }
     //message.setMessage(data)
 })
 
@@ -50,7 +55,8 @@ socket.on('console-info', data => {
 
 socket.on('game-start', data => {
     alert(data.message)
-
+    message.stopWaitingTimer()
+    
     if (data.your_turn) {
         message.setMessage('Your turn')
         sessionStorage.setItem('userData', JSON.stringify({
