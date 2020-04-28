@@ -39,12 +39,12 @@ const message = {
         })
     },
     stopWaitingTimer() {
-        document.querySelectorAll('.timer').forEach(timer => {
+        /* document.querySelectorAll('.timer').forEach(timer => {
             timer.classList.remove('start')
             if (timer.previousElementSibling.nodeName === 'SPAN') {
                 timer.previousElementSibling.innerHTML = 'invite'
             }
-        })
+        }) */
     }
 }
 

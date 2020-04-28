@@ -85,6 +85,7 @@ export default {
     },
     checkHorizontal() {
         const matrix = this.matrix
+        let winsCoords = []
         let countUser = 0
         let countComp = 0        
         
@@ -93,7 +94,12 @@ export default {
                 for (let count = coord.x; count < coord.x+5; count++) {
                     if (matrix[count][coord.y] === 'U') {
                         countUser++
+                        winsCoords.push({
+                            x: count,
+                            y: coord.y
+                        })
                     } else {
+                        winsCoords = [];
                         countUser = 0;
                         break;
                     }
@@ -102,7 +108,12 @@ export default {
                 for (let count = coord.x; count < coord.x-5; count--) {
                     if (matrix[count][coord.y] === 'U') {
                         countUser++
+                        winsCoords.push({
+                            x: count,
+                            y: coord.y
+                        })
                     } else {
+                        winsCoords = [];
                         countUser = 0;
                         break;
                     }
@@ -110,16 +121,25 @@ export default {
             }
             
             if (countUser === 5) {
-                return 'x'
+                return {
+                    win: 'x',
+                    winsCoords
+                }
             }
         }
 
+        winsCoords = [];
         for (let coord of this.compCoordinates) {
             if (coord.x + 5 <= 20) {
                 for (let count = coord.x; count < coord.x+5; count++) {
                     if (matrix[count][coord.y] === 'C') {
                         countComp++
+                        winsCoords.push({
+                            x: count,
+                            y: coord.y
+                        })
                     } else {
+                        winsCoords = [];
                         countComp = 0;
                         break;
                     }
@@ -128,70 +148,112 @@ export default {
                 for (let count = coord.x; count < coord.x-5; count--) {
                     if (matrix[count][coord.y] === 'C') {
                         countComp++
+                        winsCoords.push({
+                            x: count,
+                            y: coord.y
+                        })
                     } else {
+                        winsCoords = [];
                         countComp = 0;
                         break;
                     }
                 }
             }            
             if (countComp === 5) {
-                return 'o'
+                return {
+                    win: 'o',
+                    winsCoords
+                }
             }
         }      
     },
     checkDiagonal() {
-        const matrix = this.matrix
-        let countUser = 0
-        let countComp = 0
-        
         for (let coord of this.userCoordinates) {
-            if (coord.x + 5 <= 20) {
-                for (let count = coord.x; count < coord.x+5; count++) {
-                    if (matrix[count][coord.y+countUser] === 'U' || matrix[count][coord.y-countUser] === 'U') {
-                        countUser++
-                    } else {
-                        countUser = 0;
-                        break;
-                    }
+            let res = this.checkLeftDiagonal(coord, 'U')
+            if (res.amount === 5) {
+                return {
+                    win: 'x',
+                    winsCoords: res.winsCoords
                 }
-            } else {
-                for (let count = coord.x; count < coord.x-5; count--) {
-                    if (matrix[count][coord.y+countUser] === 'U' || matrix[count][coord.y-countUser] === 'U') {
-                        countUser++
-                    } else {
-                        countUser = 0;
-                        break;
-                    }
+            }
+            
+            res = this.checkRightDiagonal(coord, 'U')
+            if (res.amount === 5) {
+                return {
+                    win: 'x',
+                    winsCoords: res.winsCoords
                 }
-            }        
-            if (countUser === 5) {
-                return 'x'
             }
         }
 
         for (let coord of this.compCoordinates) {
-            if (coord.x + 5 <= 20) {
-                for (let count = coord.x; count < coord.x+5; count++) {
-                    if (matrix[count][coord.y+countComp] === 'C' || matrix[count][coord.y-countComp] === 'C') {                    
-                        countComp++
-                    } else {
-                        countComp = 0;
-                        break;
-                    }
+            let res = this.checkLeftDiagonal(coord, 'C')
+            if (res.amount === 5) {
+                return {
+                    win: 'o',
+                    winsCoords: res.winsCoords
                 }
-            } else {
-                for (let count = coord.x; count < coord.x-5; count--) {
-                    if (matrix[count][coord.y+countComp] === 'C' || matrix[count][coord.y-countComp] === 'C') {
-                        countComp++
-                    } else {
-                        countComp = 0;
-                        break;
-                    }
+            }
+    
+            res = this.checkRightDiagonal(coord, 'C')
+            if (res.amount === 5) {
+                return {
+                    win: 'o',
+                    winsCoords: res.winsCoords
                 }
-            }        
-            if (countComp === 5) {
-                return 'o'
             }
         }
     },
+    checkLeftDiagonal(coord, searchParam) { // from left top to bottom right
+        if (coord.x+5 > 20) return {}
+
+        let winsCoords = [];
+        let amountClicked_X_or_O = 0;
+        
+        for (let count = coord.x; count < coord.x+5; count++) {
+            if (this.matrix[count][coord.y+amountClicked_X_or_O] === searchParam) {
+                winsCoords.push({
+                    x: count,
+                    y: coord.y + amountClicked_X_or_O
+                })
+
+                amountClicked_X_or_O++
+            } else {
+                winsCoords = [];
+                amountClicked_X_or_O = 0;
+                break;
+            }
+        }
+
+        return {
+            amount: amountClicked_X_or_O,
+            winsCoords
+        }
+    },
+    checkRightDiagonal(coord, searchParam) {
+        if (coord.x-5 < -1) return {}
+
+        let winsCoords = [];
+        let amountClicked_X_or_O = 0;
+
+        for (let count = coord.x; count > coord.x-5; count--) {
+            if (this.matrix[count][coord.y+amountClicked_X_or_O] === searchParam) {
+                winsCoords.push({
+                    x: count,
+                    y: coord.y + amountClicked_X_or_O
+                })
+
+                amountClicked_X_or_O++
+            } else {
+                winsCoords = [];
+                amountClicked_X_or_O = 0;
+                break;
+            }
+        }
+
+        return {
+            amount: amountClicked_X_or_O,
+            winsCoords
+        }
+    }
 }

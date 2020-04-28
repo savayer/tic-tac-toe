@@ -68,7 +68,7 @@ const gameProcess = {
         } else {
             this.matrix[x][y] = 'C'
             this.compCoordinates.push({x, y})
-        }        
+        }
     },
     checkWin() {
         const vertical = this.checkVertical()
@@ -89,32 +89,32 @@ const gameProcess = {
                 }
             }
         } else if (horizontal) {
-            if (horizontal === 'x') {
+            if (horizontal.win === 'x') {
                 if (this.userData.type === 'x') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', horizontal.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', horizontal.winsCoords)
                 }
             } else {
                 if (this.userData.type === 'o') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', horizontal.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', horizontal.winsCoords)
                 }
             }
         } 
         else if (diagonal) {
-            if (diagonal === 'x') {
+            if (diagonal.win === 'x') {
                 if (this.userData.type === 'x') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', diagonal.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', diagonal.winsCoords)
                 }
             } else {
                 if (this.userData.type === 'o') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', diagonal.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', diagonal.winsCoords)
                 }
             }
         }
