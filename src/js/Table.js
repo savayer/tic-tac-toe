@@ -18,6 +18,7 @@ class Table {
         this.table.querySelectorAll('td').forEach(td => {
             td.setAttribute('class', '')
         })
+        this.deactivateTable();
     }
 
     createTable() {

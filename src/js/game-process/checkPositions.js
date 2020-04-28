@@ -1,6 +1,7 @@
 export default {
     checkVertical() {
         const matrix = this.matrix
+        let winsCoords = []
         let countUser = 0
         let countComp = 0
         
@@ -9,7 +10,12 @@ export default {
                 for (let count = coord.y; count < coord.y+5; count++) {
                     if (matrix[coord.x][count] === 'U') {
                         countUser++
+                        winsCoords.push({
+                            x: coord.x,
+                            y: count
+                        })
                     } else {
+                        winsCoords = [];
                         countUser = 0;
                         break;
                     }
@@ -18,23 +24,38 @@ export default {
                 for (let count = coord.y; count < coord.y-5; count--) {
                     if (matrix[coord.x][count] === 'U') {
                         countUser++
+                        winsCoords.push({
+                            x: coord.x,
+                            y: count
+                        })
                     } else {
                         countUser = 0;
+                        winsCoords = [];
                         break;
                     }
                 }
             }
+            
             if (countUser === 5) {
-                return 'x'
+                return {
+                    win: 'x',
+                    winsCoords
+                }
             }
         }
-        
+
+        winsCoords = [];
         for (let coord of this.compCoordinates) {
             if (coord.y + 5 <= 20) {
                 for (let count = coord.y; count < coord.y+5; count++) {
                     if (matrix[coord.x][count] === 'C') {
                         countComp++
+                        winsCoords.push({
+                            x: coord.x,
+                            y: count
+                        })
                     } else {
+                        winsCoords = [];
                         countComp = 0;
                         break;
                     }
@@ -43,14 +64,22 @@ export default {
                 for (let count = coord.y; count < coord.y-5; count--) {
                     if (matrix[coord.x][count] === 'C') {
                         countComp++
+                        winsCoords.push({
+                            x: coord.x,
+                            y: count
+                        })
                     } else {
+                        winsCoords = [];
                         countComp = 0;
                         break;
                     }
                 }
             }
             if (countComp === 5) {
-                return 'o'
+                return {
+                    win: 'o',
+                    winsCoords
+                }
             }
         }
     },

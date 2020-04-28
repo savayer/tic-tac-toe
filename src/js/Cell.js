@@ -75,17 +75,17 @@ const gameProcess = {
         const horizontal = this.checkHorizontal()
         const diagonal = this.checkDiagonal()
         if (vertical) {
-            if (vertical === 'x') {
+            if (vertical.win === 'x') {
                 if (this.userData.type === 'x') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', vertical.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', vertical.winsCoords)
                 }
             } else {
                 if (this.userData.type === 'o') {
-                    this.endGane('You won!')
+                    this.endGane('You won!', vertical.winsCoords)
                 } else {
-                    this.endGane('You lose!')
+                    this.endGane('You lose!', vertical.winsCoords)
                 }
             }
         } else if (horizontal) {
@@ -119,15 +119,30 @@ const gameProcess = {
             }
         }
     },
-    endGane(message) {
+    endGane(message, coords) {
         this.game = false
         //console.log('%c' + message, 'font-size: 3em;color:red')
-        alert(message)
-        domMessage.clearMessage()
-        sessionStorage.clear()
-        tableObject.clearTable()
-        socket.emit('game-finish', this.userData)
-        this.init()
+        //alert(message)
+        domMessage.setMessage(message)
+        this.animateWinCoords(coords)        
+        setTimeout(() => {
+            domMessage.clearMessage()
+            sessionStorage.removeItem('userId')
+            sessionStorage.removeItem('opponentUserId')
+            sessionStorage.removeItem('roomName')
+            tableObject.clearTable()
+            socket.emit('game-finish', this.userData)
+            this.init()
+        }, 3000)
+    },
+    animateWinCoords(coords) {
+        console.log(coords)
+        for (let coord of coords) {
+            const $td = document.querySelector(`td[data-x="${coord.x}"][data-y="${coord.y}"]`)
+            if ($td) {
+                $td.classList.add('win-coord')
+            }
+        }
     }
 }
 
