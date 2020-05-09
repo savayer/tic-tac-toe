@@ -71,50 +71,22 @@ const gameProcess = {
         }
     },
     checkWin() {
-        const vertical = this.checkVertical()
-        const horizontal = this.checkHorizontal()
-        const diagonal = this.checkDiagonal()
-        if (vertical) {
-            if (vertical.win === 'x') {
-                if (this.userData.type === 'x') {
-                    this.endGane('You won!', vertical.winsCoords)
+        const results = [this.checkVertical(), this.checkHorizontal(), this.checkDiagonal()]
+
+        for (let res of results) {
+            if (res) {
+                if (res.win === 'x') {
+                    if (this.userData.type === 'x') {
+                        this.endGane('You won!', res.winsCoords)
+                    } else {
+                        this.endGane('You lose!', res.winsCoords)
+                    }
                 } else {
-                    this.endGane('You lose!', vertical.winsCoords)
-                }
-            } else {
-                if (this.userData.type === 'o') {
-                    this.endGane('You won!', vertical.winsCoords)
-                } else {
-                    this.endGane('You lose!', vertical.winsCoords)
-                }
-            }
-        } else if (horizontal) {
-            if (horizontal.win === 'x') {
-                if (this.userData.type === 'x') {
-                    this.endGane('You won!', horizontal.winsCoords)
-                } else {
-                    this.endGane('You lose!', horizontal.winsCoords)
-                }
-            } else {
-                if (this.userData.type === 'o') {
-                    this.endGane('You won!', horizontal.winsCoords)
-                } else {
-                    this.endGane('You lose!', horizontal.winsCoords)
-                }
-            }
-        } 
-        else if (diagonal) {
-            if (diagonal.win === 'x') {
-                if (this.userData.type === 'x') {
-                    this.endGane('You won!', diagonal.winsCoords)
-                } else {
-                    this.endGane('You lose!', diagonal.winsCoords)
-                }
-            } else {
-                if (this.userData.type === 'o') {
-                    this.endGane('You won!', diagonal.winsCoords)
-                } else {
-                    this.endGane('You lose!', diagonal.winsCoords)
+                    if (this.userData.type === 'o') {
+                        this.endGane('You won!', res.winsCoords)
+                    } else {
+                        this.endGane('You lose!', res.winsCoords)
+                    }
                 }
             }
         }
@@ -136,7 +108,6 @@ const gameProcess = {
         }, 3000)
     },
     animateWinCoords(coords) {
-        console.log(coords)
         for (let coord of coords) {
             const $td = document.querySelector(`td[data-x="${coord.x}"][data-y="${coord.y}"]`)
             if ($td) {
