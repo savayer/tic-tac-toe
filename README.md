@@ -2,4 +2,4 @@
 
 simple online game  
 
-[demo](http://tictactoe.savayer.me)
+[demo](http://tictactoe.savayer.space)
